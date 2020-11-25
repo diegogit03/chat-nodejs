@@ -3,14 +3,20 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
+const updatedChat = [
+		
+];
+
 io.on('connection', socket => {
 
-	socket.on('welcome', data => {
-		console.log('boas vindas ' + data.name);
-	});
+	socket.emit('showmessages', updatedChat);
 
-	socket.on('word', data => {
-		socket.emit('result', data);
+	socket.on('message', data => {
+		updatedChat.push(data);
+
+		console.log(updatedChat);
+
+		io.emit('showmessages', updatedChat);
 	});
 
 	socket.on('disconnect', data => {
